@@ -1,0 +1,22 @@
+{
+  "menu": {},
+  "educations": {
+    "type": {
+      "college": "Faculdade",
+      "course": "Curso Livre",
+      "certification": "Certificação",
+      "bootcamp": "Bootcamp"
+    },
+    "status": {
+      "completed": "Concluído",
+      "in_progress": "Cursando",
+      "paused": "Pausado"
+    },
+    "card": {
+      "no_image": "Sem imagem",
+      "not_defined": "Não definido",
+      "certificate": "📜 Certificado",
+      "no_link": "Sem link"
+    }
+  }
+}

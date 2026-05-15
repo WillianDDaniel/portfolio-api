@@ -1,14 +1,6 @@
 import { Resend } from 'resend';
 import { buildContactFormEmail } from '../utils/email.js';
 
-export interface EmailPayload {
-  name: string;
-  company: string;
-  email?: string;
-  whatsapp?: string;
-  message: string;
-}
-
 export async function sendContactFormEmail(payload: EmailPayload) {
   const resend = new Resend(process.env.RESEND_API_KEY);
 

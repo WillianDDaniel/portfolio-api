@@ -1,0 +1,91 @@
+{
+  "menu": {
+    "home": "Inicio",
+    "about": "Sobre mí",
+    "projects": "Proyectos",
+    "educations": "Educación",
+    "contact": "Contacto"
+  },
+  "hero": {
+    "availability": "Disponible para nuevos proyectos",
+    "description": "Construyendo el futuro de la web con",
+    "descriptionHighlight": "Creatividad, Código y Compromiso.",
+    "subtext": "Desarrollador full-stack apasionado por las interfaces elegantes y el código limpio. Transformando ideas en productos digitales que a las personas les encanta usar.",
+    "cta-button-cv": "Descargar Currículum",
+    "cta-button-projects": "Ver Proyectos"
+  },
+  "about": {
+    "title": "Sobre mí",
+    "nacionality": "Brasileño",
+    "age": "{{year}} Años",
+    "location": "Cachoeirinha - RS, Brasil",
+    "university": "Análisis y Desarrollo de Sistemas",
+    "bio": {
+      "title": "Desarrollador Web Full-Stack",
+      "paragraph1": "¡Hola! Soy un **desarrollador Full Stack** con enfoque en Front-end. Uniendo mi visión estratégica de **redes sociales** con la tecnología, he construido una base práctica sólida: 2 años de experiencia como freelance y 1 año en el mercado de e-commerce. Actualmente, estoy finalizando mi carrera de **Análisis y Desarrollo de Sistemas**.",
+      "paragraph2": "Tengo un fuerte dominio de **React** y **Node.js**, com experiencia práctica en la implementación de interfaces fieles al diseño (**UX/UI**) y creación de funciones de **CRO** para potenciar conversiones. Ya sea creando APIs en el backend o front-ends dinámicos, mi enfoque es entregar código limpio, alto rendimiento y experiencias de usuario excepcionales."
+    },
+    "labels": {
+      "nacionality": "Nacionalidad",
+      "age": "Edad",
+      "location": "Ubicación",
+      "cursing": "Cursando"
+    }
+  },
+  "projects": {
+    "readMore": "Seguir leyendo",
+    "showLess": "Mostrar menos",
+    "viewProject": "Ver Proyecto",
+    "code": "Código"
+  },
+  "educations": {
+    "title": "Educación",
+    "viewCertificate": "Ver Certificado",
+    "Educations": {
+      "types": {
+        "college": "Facultad",
+        "course": "Curso",
+        "certification": "Certificación",
+        "bootcamp": "Bootcamp"
+      }
+    },
+    "date": {
+      "present": "Presente"
+    },
+    "readMore": "Seguir leyendo"
+  },
+  "contact": {
+    "title": "Contacto",
+    "form": {
+      "name": {
+        "label": "Nombre",
+        "placeholder": "Tu nombre"
+      },
+      "company": {
+        "label": "Empresa",
+        "placeholder": "Tu empresa"
+      },
+      "email": {
+        "label": "E-mail",
+        "placeholder": " Tu e-mail"
+      },
+      "whatsapp": {
+        "label": "WhatsApp",
+        "placeholder": "Tu número de WhatsApp"
+      },
+      "message": {
+        "label": "Mensaje",
+        "placeholder": "Escribe tu mensaje aquí..."
+      },
+      "submit": "Enviar Mensaje",
+      "messages": {
+        "success": "¡Mensaje enviado con éxito!",
+        "validationError": "Por favor, completa un correo electrónico o número de WhatsApp.",
+        "genericError": "Ocurrió un error al enviar el mensaje. Por favor, inténtalo de nuevo más tarde."
+      }
+    }
+  },
+  "footer": {
+    "rights": "Todos los derechos reservados © {{year}} | Desarrollado con ❤️ por Willian D. Daniel"
+  }
+}

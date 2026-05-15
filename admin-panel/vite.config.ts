@@ -17,4 +17,16 @@ export default defineConfig({
     globals: true,
     setupFiles: './src/setupTests.ts',
   },
+  server: {
+    proxy: {
+      '/auth': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      }
+    }
+  }
 })

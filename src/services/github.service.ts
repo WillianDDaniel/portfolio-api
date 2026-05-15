@@ -1,9 +1,3 @@
-interface GithubStats {
-  stars: number;
-  languages: string[];
-  topics: string[];
-}
-
 export async function fetchGithubProjectStats(repoUrl: string): Promise<GithubStats | null> {
   const regex = /github\.com\/([^/]+)\/([^/]+)/;
   const match = repoUrl.match(regex);
@@ -22,7 +16,7 @@ export async function fetchGithubProjectStats(repoUrl: string): Promise<GithubSt
       'Accept': 'application/vnd.github.v3+json',
       'Authorization': `token ${process.env.GITHUB_KEY}`
     };
-    
+
     const [infoRes, langRes] = await Promise.all([
       fetch(`https://api.github.com/repos/${owner}/${repo}`, { headers }),
       fetch(`https://api.github.com/repos/${owner}/${repo}/languages`, { headers })
