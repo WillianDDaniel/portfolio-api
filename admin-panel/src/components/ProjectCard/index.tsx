@@ -18,7 +18,7 @@ export default function ProjectCard({ project, onDelete }: ProjectCardProps) {
   return (
     <div className="bg-white shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 p-3 flex flex-col group rounded-lg">
 
-      <div className="relative w-full bg-gray-100 overflow-hidden mb-4 flex items-center justify-center aspect-[16/10]">
+      <div className="relative w-full bg-gray-100 overflow-hidden mb-4 flex items-center justify-center aspect-16/10">
         {project.imageUrl ? (
           <img
             src={project.imageUrl}

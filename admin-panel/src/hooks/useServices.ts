@@ -2,6 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { ServiceService } from '@/services/serviceService';
+import { UploadService } from '@/services/uploadService';
+
+import { useImagePreview } from '@/hooks/useImagePreview';
 
 const initialForm: Service = {
   link: '',
@@ -14,8 +17,14 @@ export function useServices(options?: { fetchList?: boolean; editId?: string }) 
 
   const [services, setServices] = useState<Service[]>([]);
   const [form, setForm] = useState<Service>(initialForm);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const {
+    imagePreview,
+    setImagePreview,
+    selectedFile,
+    setSelectedFile,
+    handleFileChange
+  } = useImagePreview();
 
   const [loading, setLoading] = useState(!!options?.fetchList || !!options?.editId);
   const [submitting, setSubmitting] = useState(false);
@@ -48,7 +57,7 @@ export function useServices(options?: { fetchList?: boolean; editId?: string }) 
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [setImagePreview]);
 
   useEffect(() => {
     if (options?.fetchList) loadServices();
@@ -65,21 +74,30 @@ export function useServices(options?: { fetchList?: boolean; editId?: string }) 
     }
   };
 
-  const getPayload = () => {
+  const getPayload = (finalImageUrl?: string) => {
     if (!form.translations[0]?.title?.trim()) throw new Error('O título em Português é obrigatório.');
 
     return {
       link: form.link,
       translations: form.translations,
-      imageUrl: imagePreview ?? undefined,
+      imageUrl: finalImageUrl ?? undefined,
     };
   };
 
   const createService = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
+    setError(null);
     try {
-      await ServiceService.create(getPayload());
+      let finalImageUrl = imagePreview || undefined;
+
+      if (selectedFile) {
+        finalImageUrl = await UploadService.uploadImage(selectedFile, 'services', `srv-${Date.now()}`);
+      }
+
+      await ServiceService.create(getPayload(finalImageUrl));
+
+      setSelectedFile(null);
       navigate('/services');
     } catch (err: any) {
       setError(err.message);
@@ -91,8 +109,17 @@ export function useServices(options?: { fetchList?: boolean; editId?: string }) 
   const updateService = async (e: React.FormEvent<HTMLFormElement>, id: string) => {
     e.preventDefault();
     setSubmitting(true);
+    setError(null);
     try {
-      await ServiceService.update(id, getPayload());
+      let finalImageUrl = imagePreview || undefined;
+
+      if (selectedFile) {
+        finalImageUrl = await UploadService.uploadImage(selectedFile, 'services', `srv-${id}`);
+      }
+
+      await ServiceService.update(id, getPayload(finalImageUrl));
+
+      setSelectedFile(null);
       navigate('/services');
     } catch (err: any) {
       setError(err.message);
@@ -113,15 +140,6 @@ export function useServices(options?: { fetchList?: boolean; editId?: string }) 
 
   const removeTranslation = (index: number) => {
     setForm({ ...form, translations: form.translations.filter((_, i) => i !== index) });
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setSelectedFile(file);
-    const reader = new FileReader();
-    reader.onload = (ev) => setImagePreview(ev.target?.result as string);
-    reader.readAsDataURL(file);
   };
 
   return {

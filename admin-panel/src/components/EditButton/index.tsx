@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 
 interface EditButtonProps {
@@ -7,7 +6,6 @@ interface EditButtonProps {
   };
   title: string;
 }
-
 
 export default function EditButton({ to: { pathname }, title }: EditButtonProps) {
 

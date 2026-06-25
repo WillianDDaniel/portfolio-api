@@ -4,6 +4,8 @@ import { relations } from 'drizzle-orm';
 export const users = pgTable('users', {
   id: uuid('id').defaultRandom().primaryKey(),
   email: text('email').notNull().unique(),
+  name: text('name'),
+  avatarUrl: text('avatar_url'),
   passwordHash: text('password_hash').notNull(),
   loginAttempts: integer('login_attempts').default(0).notNull(),
   lockUntil: timestamp('lock_until'),
@@ -132,3 +134,15 @@ export const serviceTranslationRelations = relations(serviceTranslations, ({ one
     references: [services.id],
   }),
 }));
+
+export const settings = pgTable('settings', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  theme: text('theme').$type<'light' | 'dark' | 'system'>().default('system').notNull(),
+  panelLanguage: text('panel_language').default('pt').notNull(),
+  siteUrl: text('site_url'),
+  publicEmail: text('public_email'),
+  logoUrl: text('logo_url'),
+  customConfig: jsonb('custom_config').default({}),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});

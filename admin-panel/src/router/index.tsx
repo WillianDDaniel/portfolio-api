@@ -18,6 +18,7 @@ import NotFound from '@/pages/NotFound';
 import Services from '@/pages/Services';
 import CreateService from '@/pages/Services/CreateService';
 import EditService from '@/pages/Services/EditService';
+import Profile from '@/pages/Profile';
 
 export const router = createBrowserRouter([
   {
@@ -70,6 +71,10 @@ export const router = createBrowserRouter([
       {
         path: '/services/edit/:id',
         element: <EditService />,
+      },
+      {
+        path: '/profile',
+        element: <Profile />,
       },
     ],
   },

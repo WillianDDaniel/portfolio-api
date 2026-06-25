@@ -4,6 +4,7 @@ import { cors } from 'hono/cors';
 import { serveStatic } from '@hono/node-server/serve-static'
 
 import authRoutes from './routes/auth.routes.js';
+import userRoutes from './routes/user.routes.js';
 import projectsRoutes from './routes/projects.routes.js';
 import uploadRoutes from './routes/upload.routes.js';
 import githubRoutes from './routes/github.routes.js';
@@ -25,6 +26,7 @@ app.use('*', cors({
 }));
 
 app.route('/auth', authRoutes);
+app.route('/api/user', userRoutes);
 app.route('/api/projects', projectsRoutes);
 app.route('/api/uploads', uploadRoutes);
 app.route('/api/github', githubRoutes);

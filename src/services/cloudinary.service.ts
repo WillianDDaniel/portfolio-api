@@ -15,9 +15,10 @@ const slugify = (text: string) => {
     .replace(/(^-|-$)/g, '')
 }
 
-export const generateSignature = (projectTitle: string) => {
+export const generateSignature = (folder: string, identifier: string) => {
   const timestamp = Math.floor(Date.now() / 1000)
-  const publicId = `projects/${slugify(projectTitle)}`
+
+  const publicId = `${folder}/${slugify(identifier)}`
 
   const paramsToSign = {
     timestamp,

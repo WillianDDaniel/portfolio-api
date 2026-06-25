@@ -2,6 +2,9 @@ import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { ProjectService } from '@/services/projectService';
+import { UploadService } from '@/services/uploadService';
+
+import { useImagePreview } from '@/hooks/useImagePreview';
 
 const initialForm: Project = {
   liveUrl: '',
@@ -14,18 +17,23 @@ export function useProjects(options?: { fetchList?: boolean; editId?: string }) 
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [form, setForm] = useState<Project>(initialForm);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const [loading, setLoading] = useState(!!options?.fetchList || !!options?.editId);
-  const [submitting, setSubmitting] = useState(false);
+  const {
+    imagePreview,
+    setImagePreview,
+    selectedFile,
+    setSelectedFile,
+    handleFileChange
+  } = useImagePreview();
+
+  const [loading, setLoading] = useState<boolean>(!!options?.fetchList || !!options?.editId);
+  const [submitting, setSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   const loadProjects = useCallback(async () => {
     setLoading(true);
     try {
       const data = await ProjectService.getAll();
-      console.log("buscando projetos");
       setProjects(data);
     } catch (err: any) {
       setError(err.message || "Não foi possível carregar os projetos.");
@@ -42,13 +50,14 @@ export function useProjects(options?: { fetchList?: boolean; editId?: string }) 
         ...initialForm,
         ...data,
       });
+      // Seta a imagem que veio do banco no preview
       setImagePreview(data.imageUrl || null);
     } catch (err: any) {
       setError(err.message || "Erro ao carregar dados.");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [setImagePreview]);
 
   useEffect(() => {
     if (options?.fetchList) loadProjects();
@@ -65,22 +74,31 @@ export function useProjects(options?: { fetchList?: boolean; editId?: string }) 
     }
   };
 
-  const getPayload = () => {
+  const getPayload = (finalImageUrl?: string) => {
     if (!form.translations[0]?.title?.trim()) throw new Error('O título em Português é obrigatório.');
 
     return {
       liveUrl: form.liveUrl,
       repoUrl: form.repoUrl,
       translations: form.translations,
-      imageUrl: imagePreview ?? undefined,
+      imageUrl: finalImageUrl ?? undefined,
     };
   };
 
   const createProject = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitting(true);
+    setError(null);
     try {
-      await ProjectService.create(getPayload());
+      let finalImageUrl = imagePreview || undefined;
+
+      if (selectedFile) {
+        finalImageUrl = await UploadService.uploadImage(selectedFile, 'projects', `proj-${Date.now()}`);
+      }
+
+      await ProjectService.create(getPayload(finalImageUrl));
+
+      setSelectedFile(null);
       navigate('/projects');
     } catch (err: any) {
       setError(err.message);
@@ -92,8 +110,17 @@ export function useProjects(options?: { fetchList?: boolean; editId?: string }) 
   const updateProject = async (e: React.FormEvent<HTMLFormElement>, id: string) => {
     e.preventDefault();
     setSubmitting(true);
+    setError(null);
     try {
-      await ProjectService.update(id, getPayload());
+      let finalImageUrl = imagePreview || undefined;
+
+      if (selectedFile) {
+        finalImageUrl = await UploadService.uploadImage(selectedFile, 'projects', `proj-${id}`);
+      }
+
+      await ProjectService.update(id, getPayload(finalImageUrl));
+
+      setSelectedFile(null);
       navigate('/projects');
     } catch (err: any) {
       setError(err.message);
@@ -114,15 +141,6 @@ export function useProjects(options?: { fetchList?: boolean; editId?: string }) 
 
   const removeTranslation = (index: number) => {
     setForm({ ...form, translations: form.translations.filter((_, i) => i !== index) });
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setSelectedFile(file);
-    const reader = new FileReader();
-    reader.onload = (ev) => setImagePreview(ev.target?.result as string);
-    reader.readAsDataURL(file);
   };
 
   return {

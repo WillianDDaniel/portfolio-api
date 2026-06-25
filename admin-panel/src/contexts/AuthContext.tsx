@@ -1,8 +1,17 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 
+interface User {
+  id: string;
+  email: string;
+  name: string | null;
+  avatarUrl: string | null;
+}
+
 interface AuthContextType {
   isAuthenticated: boolean;
   checkingAuth: boolean;
+  user: User | null;
+  setUser: (user: User | null) => void;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
 }
@@ -12,6 +21,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -20,11 +30,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const isJson = res.headers.get('content-type')?.includes('application/json');
 
         if (res.ok && isJson) {
+          const userData = await res.json();
+          setUser(userData);
           setIsAuthenticated(true);
         } else {
+          setUser(null);
           setIsAuthenticated(false);
         }
       } catch (_) {
+        setUser(null);
         setIsAuthenticated(false);
       } finally {
         setCheckingAuth(false);
@@ -47,7 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       throw new Error(data.message || 'Email ou senha incorretos.');
     }
 
-    setIsAuthenticated(true);
+    window.location.href = '/panel';
   };
 
   const logout = async () => {
@@ -59,11 +73,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
 
+    setUser(null);
     setIsAuthenticated(false);
   }
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, checkingAuth, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, checkingAuth, user, setUser, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
