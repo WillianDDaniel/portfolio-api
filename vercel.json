@@ -3,14 +3,12 @@
     {
       "src": "^/$",
       "dest": "/index.html"
-    },
+    }
+  ],
+  "rewrites": [
     {
-      "src": "^/projects/edit/.*",
-      "dest": "/projects/edit/index.html"
-    },
-    {
-      "src": "^/educations/edit/.*",
-      "dest": "/educations/edit/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
